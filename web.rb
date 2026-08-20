@@ -11,7 +11,6 @@ configure do
   enable :cross_origin
   set :host_authorization, { permitted_hosts: [] }
 end
-end
 
 before do
   response.headers['Access-Control-Allow-Origin'] = '*'
