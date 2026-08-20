@@ -87,11 +87,30 @@ end
 # To create a ConnectionToken for a connected account, see
 # https://stripe.com/docs/terminal/features/connect#direct-connection-tokens
 post '/connection_token' do
+  # Check the secret
+  provided_secret = request.env['HTTP_X_BACKEND_SECRET']
+  if provided_secret != 'Mof91p9DatG7!TkRAj*wp16VbXm&lqr&'
+    status 401
+    return log_info("Unauthorized: invalid or missing secret")
+  end
+
   validationError = validateApiKey
   if !validationError.nil?
     status 400
     return log_info(validationError)
   end
+
+  begin
+    token = Stripe::Terminal::ConnectionToken.create
+  rescue Stripe::StripeError => e
+    status 402
+    return log_info("Error creating ConnectionToken! #{e.message}")
+  end
+
+  content_type :json
+  status 200
+  return {:secret => token.secret}.to_json
+end
 
   begin
     token = Stripe::Terminal::ConnectionToken.create
