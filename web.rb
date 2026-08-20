@@ -38,15 +38,13 @@ end
 
 def validateApiKey
   if Stripe.api_key.nil? || Stripe.api_key.empty?
-    return "Error: you provided an empty secret key. Please provide your test mode secret key. For more information, see https://stripe.com/docs/keys"
+    return "Error: you provided an empty secret key."
   end
   if Stripe.api_key.start_with?('pk')
-    return "Error: you used a publishable key to set up the example backend. Please use your test mode secret key. For more information, see https://stripe.com/docs/keys"
-  end
-  if Stripe.api_key.start_with?('sk_live')
-    return "Error: you used a live mode secret key to set up the example backend. Please use your test mode secret key. For more information, see https://stripe.com/docs/keys#test-live-modes"
+    return "Error: you used a publishable key. Please use your secret key."
   end
   return nil
+
 end
 
 # This endpoint registers a Verifone P400 reader to your Stripe account.
