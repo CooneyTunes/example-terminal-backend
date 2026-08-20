@@ -112,18 +112,6 @@ post '/connection_token' do
   return {:secret => token.secret}.to_json
 end
 
-  begin
-    token = Stripe::Terminal::ConnectionToken.create
-  rescue Stripe::StripeError => e
-    status 402
-    return log_info("Error creating ConnectionToken! #{e.message}")
-  end
-
-  content_type :json
-  status 200
-  return {:secret => token.secret}.to_json
-end
-
 # This endpoint creates a PaymentIntent.
 # https://stripe.com/docs/terminal/payments#create
 #
